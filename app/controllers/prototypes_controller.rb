@@ -1,7 +1,7 @@
 class PrototypesController < ApplicationController
   before_action :authenticate_user!, only: [:new, :edit]
-  before_action :set_find_params, only: [:edit, :show]
-  before_action :move_to_index, except: [:index, :show, :new]
+
+  before_action :move_to_index, except: [:index, :show, :new, :create]
 
   def index
     @prototypes = Prototype.all
@@ -21,12 +21,13 @@ class PrototypesController < ApplicationController
   end
 
   def show
+    @prototype = Prototype.find(params[:id])
     @comment = Comment.new
     @comments = @prototype.comments.includes(:prototype)
   end
 
   def edit
-  
+    @prototype = Prototype.find(params[:id])
   end
 
   def update
@@ -47,9 +48,9 @@ class PrototypesController < ApplicationController
 
   private
 
-  def set_find_params
-    @prototype = Prototype.find(params[:id])
-  end
+  # def set_find_params
+  #   @prototype = Prototype.find(params[:id])
+  # end
 
   def prototype_params
     params.require(:prototype).permit(:title, :catch_copy, :concept, :image).merge(user_id: current_user.id)
